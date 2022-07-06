@@ -62,7 +62,7 @@ public class CategoryController {
         Category selectedCategory = categoryRepository.findById(id)
                 .map(category -> {
                     category.setName(newCategory.getName());
-                    return categoryRepository.save(newCategory);
+                    return categoryRepository.save(category);
                 })
                 .orElseGet(() -> {
                     newCategory.setId(id);

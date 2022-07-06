@@ -66,7 +66,7 @@ public class AuthorController {
                     author.setGender(newAuthor.getGender());
                     author.setNationality(newAuthor.getNationality());
                     author.setYearOfBirth(newAuthor.getYearOfBirth());
-                    return authorRepository.save(newAuthor);
+                    return authorRepository.save(author);
                 })
                 .orElseGet(() -> {
                     newAuthor.setId(id);

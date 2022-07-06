@@ -32,15 +32,17 @@ public class Book  {
     @NotNull
     private String authorFullname;
 
+
     @NotNull
     private String categoryName;
 
     @NotNull
     private String title;
 
+
     private String description;
 
-    private int price;
+    private float price;
 
     private int year;
 

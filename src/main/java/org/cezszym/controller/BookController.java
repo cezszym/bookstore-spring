@@ -82,9 +82,15 @@ public class BookController {
     }
 
     @PutMapping("/books/{id}")
-    ResponseEntity<EntityModel<Book>> replaceEmployee(@RequestBody Book newBook, @PathVariable int id) {
+    ResponseEntity<EntityModel<Book>> replaceEmployee(@RequestBody BookDTO newBook, @PathVariable int id) {
 
         if (!GetUserRole().equals(Role.ADMIN)) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+
+        Author author = authorRepository.getById(newBook.getAuthor_id());
+        if (author == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        Category category = categoryRepository.getById(newBook.getCategory_id());
+        if (author == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
         Book selectedBook = bookRepository.findById(id)
                 .map(book -> {
@@ -92,11 +98,24 @@ public class BookController {
                     book.setDescription(newBook.getDescription());
                     book.setPrice(newBook.getPrice());
                     book.setYear(newBook.getYear());
-                    return bookRepository.save(newBook);
+                    book.setAuthor(author);
+                    book.setAuthorFullname(author.getName() + " " + author.getSurname());
+                    book.setCategory(category);
+                    book.setCategoryName(category.getName());
+                    return bookRepository.save(book);
                 })
                 .orElseGet(() -> {
-                    newBook.setId(id);
-                    return bookRepository.save(newBook);
+                    Book book = bookRepository.save(Book.builder()
+                            .title(newBook.getTitle())
+                            .author(author)
+                            .authorFullname(author.getName() + " " + author.getSurname())
+                            .category(category)
+                            .categoryName(category.getName())
+                            .description(newBook.getDescription())
+                            .price(newBook.getPrice())
+                            .year(newBook.getYear())
+                            .build());
+                    return bookRepository.save(book);
                 });
         return ResponseEntity.ok(EntityModel.of(selectedBook));
     }

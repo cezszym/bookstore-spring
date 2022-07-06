@@ -18,7 +18,7 @@ public class BookDTO {
 
     private String description;
 
-    private int price;
+    private float price;
 
     private int year;
 
